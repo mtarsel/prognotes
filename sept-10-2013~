@@ -1,0 +1,93 @@
+#lang racket
+;(list-from-to 1 5) outputs: '(1 2 3 4 5)
+;(list-from-to -3 7) outputs: '(-3 -2 -1 0 1 2 3 4 5 6 7)
+(define list-from-to
+  (lambda (low high)
+    (if (> low high)
+        '()
+        (cons low
+              (list-from-to (+ low 1) high)))))
+
+;(map square '(1 2 3 4 5) outputs: '(1 4 9 16 25)
+;map (lambda(x)(+x 1))(list-from-to 1 5)) outputs: '(2 3 4 5 6)
+(define square
+  (lambda (n)
+    (* n n)))
+
+(define my-map
+  (lambda (f ls)
+    (if (null? ls)
+         '()
+         (cons (f (car ls))
+               (my-map f (cdr ls))))))
+
+;(filter even? '(1 2 3 4 5 6)) outputs: '(2 4 6)
+(define my-filter
+  (lambda ( test? ls)
+    (cond ((null? ls) '())
+        ((test? (car ls)) (cons (car ls) (my-filter test? (cdr ls))))
+        (else (my-filter test? (cdr ls))))))
+;#####TESTING#####
+;> (my-filter even? (list-from-to 1 10))
+;'(2 4 6 8 10)
+;> (my-filter (lambda (x) (not (even? x))) (list-from-to 1 10))
+;'(1 3 5 7 9)
+
+;(accumulate + 0 square '(1 2 3 4)) output: 0+ 1^2 + 2^2 + 3^2 + 4^2 = 30
+;(accumulate * 1 (lambda(x)(+ x 1)) '(1 2 3 4)) outputs: 2*3*4*5 = 5! = 120
+(define accumulate
+  (lambda (op base term ls)
+    (if (null? ls)
+        base
+        (op (term (car ls)) 
+            (accumulate op base term (cdr ls))))))
+;#####TESTING#####
+;> (accumulate + 0 square '())
+;0
+;> (accumulate + 1 square '())
+;1
+;> (accumulate + 0 square '(1 2 3 4))
+;30
+;> (accumulate + 1 (lambda (x) (+ x 1)) '(1 2 3 4))
+;15
+;> (accumulate * 1 (lambda (x) (+ x 1)) '(1 2 3 4))
+;120
+
+(define my-map2
+  (lambda (f ls)
+    (accumulate cons '() f ls)))
+;#####TESTING#####
+;> (my-map2 square '())
+;'()
+;> (my-map2 square '(1 2 3 4 5))
+;'(1 4 9 16 25)
+        
+(define my-length2 
+  (lambda (ls)
+    (accumulate + 0 (lambda(x) 1 ) ls)))
+;#####TESTING#####
+;> (my-length2 '())
+;0
+;> (my-length2 (list-from-to 1 100))
+;100
+
+(define append
+  (lambda (ls1 ls2)
+    (accumulate cons ls2  (lambda(x) x) ls1)))
+;#####TESTING#####
+;> (append '() '())
+;'()
+;> (append '(1) '(1))
+;'(1 1)
+;> (append '(1 2 3 4 5) '(6 7 8 9))
+;'(1 2 3 4 5 6 7 8 9)
+                
+
+
+
+
+
+
+
+
+
