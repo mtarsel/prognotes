@@ -17,4 +17,9 @@
 (define select-any-from-list
   (lambda (ls)
     (list-ref ls (random (length ls)))))
+
+;some pseudo-code for assignment 1
+;(define hedge
+;  (lambda ()
+;    (select-any-from-list *hedges*)))
          
