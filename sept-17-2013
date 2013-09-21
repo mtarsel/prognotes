@@ -74,9 +74,9 @@
 
 (define response-part
   (lambda (pair)
-    (__________ pair)))
+    (cadr pair)))
     
-;TODO   
+
 (define try-strong-cues
   (lambda (sentence)
     (define helper
@@ -86,6 +86,73 @@
                (select-any-from-list (response-part(car list-of-pairs)))
                (else (helper (cdr list-of-pairs))))))
         (helper *strong-cues*))))
+
+;#### SEPTEMBER 19, 2013 NOTES ####
+
+	(define *hedges*
+	  '((its like im telling you)
+	    (now calm down)
+	    (take it easy)
+	    (its elementary lou)
+	    (im trying to tell you)
+	    (but you asked)))
+	
+(define *strong-cues*
+  '( ( ((the names) (their names))
+       ((whos on first whats on second i dont know on third)
+	        (whats on second whos on first i dont know on third)) )
+	     ( ((suppose) (lets say) (assume))
+       ((okay) (why not) (sure) (it could happen)) )
+	     ( ((i dont know))
+       ((third base) (hes on third)) )
+   ))
+        
  
+(define whos-on-first-loop 
+  (lambda (old-context)
+    (let ((costellos-line (read)))
+      (let ((new-context (get-context costellos-line old-context)))
+        (let ((strong-reply (try-strong-cues costellos-line)))
+          (let ((weak-reply (try-weak-cues costellos-line new-context))) 
+               (cond ((not (null? strong-reply))
+                      (writeln strong-reply)
+                      (whos-on-first-loop (get-context strong-reply new-context)))
+                     ((not (null? weak-reply))
+                      (writeln weak-reply)
+		      (whos-on-first-loop (get-context weak-reply new-context)))
+                     ((wants-to-end? costellos-line)
+                      (wrap-it-up))
+                     (else 
+                      (writeln (hedge))
+                      (whos-on-first-loop new-context)))))))))
+
+(define whos
+  (lambda ()
+    (whos-on-first-loop '())))
+
+(define try-strong-cues
+  (lambda (sentence)
+    '()))
+
+(define wants-to-end?
+  (lambda (sentence)
+    (equal? sentence '(i quit))))
+
+;(define wrap-it-up
+;  (lambda
+
+(define hedge
+  (lambda ()
+    (select-any-from-list *hedges*)))
+
+(define get-context
+  (lambda (sentence old-context)
+    '()))
+
+;(define try-weak-cues
+;  (lambda (sentence 
+           
+       
+    
 
          
