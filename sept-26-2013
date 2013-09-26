@@ -30,12 +30,23 @@
 	(build-input-list)))))
 
 ;To run it: (define boo (file->list "/home/mick/scheme/prognotes/plain.txt"))
+; boo
 
 
 ; list->file
 ; writes a list of characters to a file
 ;
 (define list->file
-  (lambda (filename ls) 
-    ; [FILL IN]
-    '()))
+  (lambda (filename ls)
+    (let ((output-port (open-output-file filename #:exists 'replace)));definition of a flag
+      (letrec
+          ((build-output-file
+            (lambda (ls)
+              (cond ((null? ls)
+                     (close-output-port output-port))
+                    (else 
+                     (write-char (car ls) output-port)
+                     (build-output-file (cdr ls)))))))
+        (build-output-file ls)))))
+           
+;(list->file "/home/mick/scheme/prognotes/boo.txt" boo)                     
