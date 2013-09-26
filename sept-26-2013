@@ -10,3 +10,32 @@
 
 ;(a,b) ->? (a',b')
 ;write a filter on this stream to remove duplicates. Find fractions that are in simplest form (write a filter).
+
+
+
+; file->list
+; reads a file of characters into a list
+;
+(define file->list
+  (lambda (filename) 
+    (let ((input-port (open-input-file filename))) 
+      (letrec 
+	((build-input-list 
+	   (lambda () 
+	     (let ((current-char (read-char input-port))) 
+	       (if (eof-object? current-char) 
+		 (begin (close-input-port input-port) 
+			'()) 
+		 (cons current-char (build-input-list))))))) 
+	(build-input-list)))))
+
+;To run it: (define boo (file->list "/home/mick/scheme/prognotes/plain.txt"))
+
+
+; list->file
+; writes a list of characters to a file
+;
+(define list->file
+  (lambda (filename ls) 
+    ; [FILL IN]
+    '()))
