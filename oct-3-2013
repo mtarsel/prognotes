@@ -27,9 +27,33 @@
                        ((error) (write "Error: ") (writeln (cadr message)));DANGEROUS: message might not have any parameters
                        (else (writeln "Unknown Message"))))))))
         this))));this let statement returns a function, the output function
+
+(define make1-stack
+  (lambda ()
+    (let ((stack '()))
+      (letrec
+          ((this
+            (lambda message 
+              (cond ((null? message) (this 'error "No arguments")) ;recursion at the object level
+                    (else
+                     (case (car message) 
+                       ((show) stack)
+                       ((empty?) (null? stack))
+                       ;((top) (car stack)) ;VERY DANGEROUS - stack can be empty. There might not be a car
+                       ((top) (if (not (this 'empty?)) 
+                                  (car stack) 
+                                  (this 'error "Empty stack")))
+                       ((error)
+                        (if (not (null? (cdr message)))
+                            (writeln (cadr message))
+                            (this 'error "No arguments to error!")))
+                       (else (writeln "Unknown Message"))))))))
+        this))));this let statement returns a function, the output function
                 
 ;runit: 
 ; >(define boo (make-stack))
 ; >(boo)
 ; >(boo 23)
 ; >(boo 'show)
+; >(define boo (make1-stack))
+; (boo 'error)
