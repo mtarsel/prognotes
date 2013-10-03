@@ -45,8 +45,13 @@
                                   (this 'error "Empty stack")))
                        ((push!)
                         (if (not (null? (cdr message)))
-                        (cons (cadr message) stack)
+                        (set! stack (cons (cadr message) stack)); set! is a destructive assignment
                         (this 'error "Nothing to push")))
+                       
+                       ((pop!)
+                        (if (not (this 'empty?))
+                            (set! stack (cdr stack))
+                            (this 'error "Nothin to pop")))
                        
                        ((error)
                         (if (not (null? (cdr message)))
@@ -60,5 +65,14 @@
 ; >(boo)
 ; >(boo 23)
 ; >(boo 'show)
+
+
+
 ; >(define boo (make1-stack))
-; (boo 'error)
+; >(boo 'error)
+; >(boo 'show)
+; >(boo 'push! "oatmeal") [same with pop!]
+; >(boo 'push! 'raisin)
+; >(boo 'top)
+; >(boo 'show)
+
