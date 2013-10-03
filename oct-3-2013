@@ -43,6 +43,11 @@
                        ((top) (if (not (this 'empty?)) 
                                   (car stack) 
                                   (this 'error "Empty stack")))
+                       ((push!)
+                        (if (not (null? (cdr message)))
+                        (cons (cadr message) stack)
+                        (this 'error "Nothing to push")))
+                       
                        ((error)
                         (if (not (null? (cdr message)))
                             (writeln (cadr message))
