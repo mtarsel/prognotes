@@ -28,4 +28,8 @@
                        (else (writeln "Unknown Message"))))))))
         this))));this let statement returns a function, the output function
                 
-
+;runit: 
+; >(define boo (make-stack))
+; >(boo)
+; >(boo 23)
+; >(boo 'show)
