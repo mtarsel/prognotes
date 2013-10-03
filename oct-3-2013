@@ -28,6 +28,7 @@
                        (else (writeln "Unknown Message"))))))))
         this))));this let statement returns a function, the output function
 
+
 (define make1-stack
   (lambda ()
     (let ((stack '()))
@@ -65,7 +66,6 @@
 ; >(boo)
 ; >(boo 23)
 ; >(boo 'show)
-
 
 
 ; >(define boo (make1-stack))
