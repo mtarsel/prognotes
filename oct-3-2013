@@ -1,0 +1,31 @@
+#lang racket
+;for HW2, we have to implement right-justify
+
+; Scheme (what we have covered):
+; -functions or 1st class objects
+; -input and output that are functions (compose)
+; -streams (infite lists) Delayed evaluation
+; -Objects
+; -Continuations (back tracking)
+
+(define writeln
+  (lambda (stuff)
+    (write stuff)
+    (newline)))
+
+(define make-stack
+  (lambda ()
+    (let ((stack '()))
+      (letrec
+          ((this
+            (lambda message ;NOTICE: no paramters - this is a variable number of arguments
+              (cond ((null? message) (writeln "No arguments"))
+                    (else
+                     (case (car message) ; switch statement in scheme
+                       ((show) stack)
+                       ((empty?) (null? stack))
+                       ((error) (write "Error: ") (writeln (cadr message)));DANGEROUS: message might not have any parameters
+                       (else (writeln "Unknown Message"))))))))
+        this))));this let statement returns a function, the output function
+                
+
