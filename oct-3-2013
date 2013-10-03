@@ -83,4 +83,5 @@
 ; >(boo 'push! 'raisin)
 ; >(boo 'top)
 ; >(boo 'show)
+; >(boo 'clear!)
 
