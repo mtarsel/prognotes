@@ -1,0 +1,14 @@
+#lang racket
+
+(define smart-producr
+  (lambda (ls)
+    (call with-current-continutation
+          (lambda (cc)
+            (let helprt ((ls ls))
+              (cond ((null? ls) 1)
+                    ((zero? (car ls)) (cc 0))
+                    (else
+                     (ping "down" (car ls))
+                     (let ((anser ((helper (cdr ls)))))
+                       (ping "up" (car ls))
+                       (* (car ls) answer)))))))))

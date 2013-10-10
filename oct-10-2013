@@ -1,0 +1,63 @@
+#lang racket
+
+
+;(define factorial
+;  (lambda (n)
+;    (cond ((zero? n) 1)
+;          (else (* n (factorial (- n 1)))))))
+
+(define zombie #f)
+(define factorial
+  (lambda (n)
+    (cond ((zero? n)
+           (call-with-current-continuation
+            (lambda (cc)
+              (set! zombie cc)
+               1)))
+           (else (* n (factorial (- n 1)))))))
+
+;continuation is function on one input
+
+;continuation-passing style
+(define car&cdr
+  (lambda (ls cc)
+    (cc (car ls) (cdr ls))))
+
+;> (member 'a '(a b c d e))
+;'(a b c d e)
+;> (car&cdr '(a b c d e) member)
+;#f
+;> (car&cdr '(a b c d e) member)
+;#f
+;> (car&cdr '(a b c d a) member)
+;'(a)
+;> (car&cdr '(a b c d e) (lambda (x y) (cons y x)))
+;'((b c d e) . a)
+
+(define quotient-remainder
+  (lambda (a b success failure)
+    (cond ((zero? b)
+           (failure "division by zero"))
+          (else 
+           (success (quotient a b) (remainder a b))))))
+
+;> (quotient-remainder 11 7 cons error)
+;'(1 . 4)
+;> (quotient-remainder 11 0 cons error)
+
+;implicit vs explicit continuation passing
+(define imp-cc
+  (lambda ()
+    (letrec ((f (lambda (x) (cons 'a x)))
+            (g (lambda (x) (cons 'b (f x))))
+            (h (lambda (x) (g (cons 'c x)))))
+           (cons 'd (h '())))))
+
+(define exp-cc
+  (lambda ()
+    (letrec
+        ((f (lambda (x cc) (cc (cons 'a x))))
+         (g (lambda (x cc) (f x (lambda (y) (cc (cons 'b y))))))
+         (h (lambda (x cc) (g (cons 'c x) cc))))
+      (h '() (lambda (y) (cons 'd y))))))
+         
